@@ -7,6 +7,7 @@ public class User {
     private String secondName;
     private String login;
     private String password;
+    private int id;
 
     public User(GetUser getUser){
         firstName = getUser.getFirstname();
@@ -52,5 +53,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

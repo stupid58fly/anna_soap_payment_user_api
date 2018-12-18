@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.config.annotation.EnableWs;
 import org.springframework.ws.config.annotation.WsConfigurerAdapter;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
@@ -47,5 +48,23 @@ public class WebServiceConfig extends WsConfigurerAdapter {
     @Bean
     public XsdSchema countriesSchema() {
         return new SimpleXsdSchema(new ClassPathResource("payment.xsd"));
+    }
+
+    @Bean
+    public Jaxb2Marshaller marshaller() {
+        Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+        // this is the package name specified in the <generatePackage> specified in
+        // pom.xml
+        marshaller.setContextPath("hello.wsdl");
+        return marshaller;
+    }
+
+    @Bean
+    public TransactionService transactionService(Jaxb2Marshaller marshaller) {
+        TransactionService client = new TransactionService();
+        client.setDefaultUri("http://webapp-linux-181205003304.azurewebsites.net/bank/");
+        client.setMarshaller(marshaller);
+        client.setUnmarshaller(marshaller);
+        return client;
     }
 }
